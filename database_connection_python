@@ -1,0 +1,41 @@
+import mysql.connector
+print("wlecome to our page")
+print('press 1 to create a account')
+print('press 2 to login to our page')
+i=int(input('enter the num:'))
+mydb=mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='***********',
+    database='mydatabase'
+)
+mycursor=mydb.cursor()
+# mycursor.execute('create table user(id int auto_increment primary key,username varchar(255),password varchar(255))')
+if(i==1):
+    username_1=input('enter your username:')
+    password=input('enter your password:')
+    password_1=input('confirm your password:')
+    if(password==password_1):
+        sql='insert into user(username,password) values(%s,%s)'
+        val=(username_1,password_1)
+        mycursor.execute(sql,val)
+        mydb.commit()
+        print(mycursor.rowcount,'record inserted.')
+
+elif(i==2):
+    username_2=input('enter your username:')
+    
+    password_2=input('enter your password:')
+    sql=("select * from user where username='{0}' and password='{1}'").format(username_2,password_2)
+    mycursor.execute(sql)
+    
+    myresult=mycursor.fetchall()
+
+    if(myresult[0][1]==username_2):
+        if(myresult[0][2]==password_2):
+            print('access allowed')
+            for i in myresult:
+                print(i)
+
+else:
+    print('access denied')
